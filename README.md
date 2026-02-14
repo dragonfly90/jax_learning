@@ -14,6 +14,11 @@ Hands-on examples covering core JAX concepts, from basics to distributed trainin
 | `06_scan_and_control_flow.py` | Loops and conditionals in JIT | `lax.scan`, `lax.cond`, `lax.while_loop`, `lax.fori_loop` |
 | `07_custom_derivatives.py` | Custom autodiff rules | `custom_jvp`, `custom_vjp`, `stop_gradient`, `checkpoint` |
 | `08_nn_with_flax.py` | Neural networks with Flax + Optax | `nn.Module`, `nn.Dense`, `nn.Conv`, `optax.adam` |
+| `09_flash_attention.py` | Flash Attention algorithm | Block-wise attention, online softmax, causal masking |
+| `10_paged_attention.py` | Paged Attention for LLM serving | Page table, KV cache management, copy-on-write |
+| `11_transformer_training.py` | GPT training from scratch | RoPE, SwiGLU, AdamW + cosine schedule, grad accumulation |
+| `12_tpu_training.py` | TPU training patterns | bfloat16, FSDP, tensor parallelism, `donate_buffers` |
+| `13_distributed_training.py` | Multi-host distributed training | `jax.distributed`, per-host data loading, orbax checkpointing |
 
 ## Quick Start
 
