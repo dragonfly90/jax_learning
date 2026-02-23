@@ -72,8 +72,8 @@ def flash_attention_manual(q, k, v, block_size=64):
             s_ij = (q_block @ k_block.T) * scale
 
             # Online softmax update
-            m_ij = jnp.max(s_ij, axis=-1, keepdims=True)       # local max
-            m_new = jnp.maximum(m_i, m_ij)                       # global max
+            m_ij = jnp.max(s_ij, axis=-1, keepdims=True)       # (Br, 1)
+            m_new = jnp.maximum(m_i, m_ij)                       # (Br, 1)
 
             # Correction factors for previously accumulated values
             exp_old = jnp.exp(m_i - m_new)

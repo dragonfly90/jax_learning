@@ -56,10 +56,7 @@ def train_step(params, x_batch, y_batch):
     return new_params, loss
 
 # Need to specify axis_name for collectives
-train_step = jax.pmap(
-    lambda params, x, y: jax.value_and_grad(loss_fn)(params, x, y),
-    axis_name='devices'
-)
+# train_step = jax.pmap(...)  # This was redundant and causing issues in the script
 
 # Setup: replicate params across devices, shard data
 n_devices = jax.device_count()
