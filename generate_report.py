@@ -1,33 +1,51 @@
 import os
+import re
 import nbformat
 from nbconvert import HTMLExporter
-import json
+
+def extract_body_content(html):
+    """Extract content between <body> and </body>, stripping the full HTML wrapper."""
+    match = re.search(r'<body[^>]*>(.*)</body>', html, re.DOTALL)
+    if match:
+        return match.group(1)
+    return html
 
 def generate_report():
     notebook_dir = 'notebooks'
     notebook_files = sorted([f for f in os.listdir(notebook_dir) if f.endswith('.ipynb')])
-    
+
     html_exporter = HTMLExporter()
-    html_exporter.template_name = 'lab' # 'lab' template is often more reliable
-    
+    html_exporter.template_name = 'lab'
+    html_exporter.exclude_anchor_links = True
+
+    # Collect CSS from the first notebook export to include once
+    collected_styles = []
     all_lessons = []
-    
-    for filename in notebook_files:
+
+    for i, filename in enumerate(notebook_files):
         path = os.path.join(notebook_dir, filename)
         with open(path, 'r', encoding='utf-8') as f:
             nb = nbformat.read(f, as_version=4)
-            # Use HTMLExporter with exclude_anchor_links to keep it clean
-            html_exporter.exclude_anchor_links = True
             (body, resources) = html_exporter.from_notebook_node(nb)
-            
-            # Extract title from the filename or first cell
+
+            # Extract styles from the first notebook only (they're all the same)
+            if i == 0:
+                style_matches = re.findall(r'<style[^>]*>(.*?)</style>', body, re.DOTALL)
+                collected_styles = style_matches
+
+            # Extract only the body content, removing full HTML document wrapper
+            content = extract_body_content(body)
+
             title = filename.replace('.ipynb', '').split('_', 1)[1].replace('_', ' ').title()
-            
+
             all_lessons.append({
                 'id': filename.split('_')[0],
                 'title': title,
-                'content': body
+                'content': content
             })
+
+    # Build the notebook styles block (from nbconvert, included once)
+    nb_styles = '\n'.join(f'<style>{s}</style>' for s in collected_styles)
 
     # Prepare the final HTML template
     template = f"""
@@ -40,6 +58,7 @@ def generate_report():
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    {nb_styles}
     <style>
         :root {{
             --bg-dark: #0a0a0c;
@@ -149,8 +168,11 @@ def generate_report():
             margin-left: 300px;
             flex: 1;
             padding: 3rem;
-            max-width: 1200px;
             background-color: var(--bg-dark);
+        }}
+
+        main > * {{
+            max-width: 1000px;
         }}
 
         section {{
@@ -267,6 +289,40 @@ def generate_report():
 
         .jp-Cell:hover .copy-btn {{
             opacity: 1;
+        }}
+
+        /* Force dark theme on all notebook elements */
+        .jp-Notebook, .jp-Cell, .jp-InputArea, .jp-OutputArea,
+        .jp-RenderedHTMLCommon, .jp-RenderedMarkdown,
+        div.jp-Cell-inputWrapper, div.jp-Cell-outputWrapper {{
+            background-color: transparent !important;
+            color: var(--text-main) !important;
+        }}
+
+        .highlight, .highlight pre {{
+            background: rgba(0,0,0,0.3) !important;
+            color: var(--text-main) !important;
+        }}
+
+        .jp-RenderedHTMLCommon table {{
+            color: var(--text-main) !important;
+        }}
+
+        .jp-RenderedHTMLCommon a {{
+            color: var(--accent-secondary) !important;
+        }}
+
+        .jp-RenderedHTMLCommon code {{
+            background: rgba(255,255,255,0.1) !important;
+            color: var(--accent-primary) !important;
+            padding: 0.15em 0.4em !important;
+            border-radius: 4px !important;
+        }}
+
+        .jp-RenderedHTMLCommon pre code {{
+            background: transparent !important;
+            color: inherit !important;
+            padding: 0 !important;
         }}
 
     </style>
