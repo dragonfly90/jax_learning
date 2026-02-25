@@ -22,6 +22,7 @@ Hands-on examples covering core JAX concepts, from basics to distributed trainin
 | `12_tpu_training.py` | TPU training patterns | bfloat16, FSDP, tensor parallelism, `donate_buffers` |
 | `13_distributed_training.py` | Multi-host distributed training | `jax.distributed`, per-host data loading, orbax checkpointing |
 | `14_shard_map_vs_jit.py` | shard_map vs jax.jit parallelism | `shard_map`, `psum`, `pmean`, `ppermute`, `NamedSharding` |
+| `15_value_and_grad.py` | Computing values and gradients together | `value_and_grad`, `argnums`, `has_aux`, pytree grads |
 
 ## Quick Start
 
