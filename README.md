@@ -21,6 +21,7 @@ Hands-on examples covering core JAX concepts, from basics to distributed trainin
 | `11_transformer_training.py` | GPT training from scratch | RoPE, SwiGLU, AdamW + cosine schedule, grad accumulation |
 | `12_tpu_training.py` | TPU training patterns | bfloat16, FSDP, tensor parallelism, `donate_buffers` |
 | `13_distributed_training.py` | Multi-host distributed training | `jax.distributed`, per-host data loading, orbax checkpointing |
+| `14_shard_map_vs_jit.py` | shard_map vs jax.jit parallelism | `shard_map`, `psum`, `pmean`, `ppermute`, `NamedSharding` |
 
 ## Quick Start
 
