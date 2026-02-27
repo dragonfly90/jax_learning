@@ -49,3 +49,9 @@ XLA_FLAGS='--xla_force_host_platform_device_count=8' python 05_sharding_and_mesh
 **Mesh & Sharding** — The modern way to distribute computation. Define a logical device grid (`Mesh`), specify how arrays map to it (`PartitionSpec`), and let `jit` handle the rest.
 
 **Scan** — JAX's loop primitive. Compiles an entire sequential computation (RNN, training loop) into a single efficient XLA program instead of unrolling Python loops.
+
+## Resources
+
+- [Scaling JAX Book](https://jax-ml.github.io/scaling-book/) — Official guide to scaling JAX programs across devices and hosts
+- [Learning JAX](https://github.com/rcrowe-google/Learning-JAX) — Google's JAX learning repository with notebooks and examples
+- [JAX Video Series](https://www.youtube.com/playlist?list=PLOU2XLYxmsIJBcjiFi8LdyY5YGR8sz0ZZ) — Official Google JAX video tutorials on YouTube
